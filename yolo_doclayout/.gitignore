@@ -1,0 +1,37 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+backend/.pytest_cache/
+backend/**/__pycache__/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
+
+# Output directory (ignore large generated binaries, keep directory structure)
+results/*
+!results/.gitkeep
+backend/results/*
+!backend/results/.gitkeep
+backend/results/uploads/*
+!backend/results/uploads/.gitkeep
+data/output/
+runs/
+*.log
+
+# Model Weights (ignore large .pt weight binaries to respect GitHub 100MB limit)
+*.pt
+backend/weights/*
+!backend/weights/.gitkeep
+

@@ -1,0 +1,16 @@
+# OpenRouter Vision-Language Model (VLM) API Layout Region Detection & Spatial Classification Engine
+# Multimodal Cloud API & Computer Vision Stack
+
+requests>=2.30.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+pillow>=10.0.0
+matplotlib>=3.7.0
+pyyaml>=6.0
+
+# Flask Web Dashboard & REST Application Server
+flask>=3.0.0
+werkzeug>=3.0.0
+
+# Automated Verification & Test Framework
+pytest>=7.4.0

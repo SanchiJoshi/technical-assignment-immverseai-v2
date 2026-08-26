@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Manuscript Layout Analysis Engine</title>
+    <meta name="description" content="Substrate-aware Computer Vision pipeline for historical Indian manuscript layout region detection and spatial classification.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        <line x1="8" y1="6" x2="16" y2="6"></line>
+                        <line x1="8" y1="10" x2="16" y2="10"></line>
+                        <line x1="8" y1="14" x2="13" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Manuscript Layout Region Detection</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Container -->
+        <main class="dashboard-grid">
+            <!-- Left Panel: Input & Control Center -->
+            <section class="control-panel glass-card">
+                <div class="panel-header">
+                    <h2>Input Selection</h2>
+                    <span class="step-num">Step 1</span>
+                </div>
+
+                <!-- File Dropzone -->
+                <div class="dropzone-wrapper" id="dropzone">
+                    <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp,.webp" hidden>
+                    <div class="dropzone-content">
+                        <div class="upload-icon">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <p class="drop-title">Drag & Drop Manuscript Scan</p>
+                        <p class="drop-hint">Supports Palm-leaf (.png) & Paper folios (.jpg, .png)</p>
+                        <button type="button" class="btn-secondary" id="browse-btn">Browse Local Scan</button>
+                    </div>
+                    <div class="selected-file-banner" id="selected-file-banner" style="display: none;">
+                        <span class="file-name-text" id="selected-filename">sample.jpg</span>
+                        <button type="button" class="btn-icon-clear" id="clear-file-btn" title="Remove selected file">&times;</button>
+                    </div>
+                </div>
+
+                <!-- Sample Manuscripts Selector -->
+                <div class="sample-section">
+                    <label class="section-label">Or Select Pre-Loaded Test Folio:</label>
+                    <div class="samples-scroll" id="samples-container">
+                        <!-- Samples injected via JavaScript -->
+                        <div class="loading-samples-spinner">Loading sample scans...</div>
+                    </div>
+                </div>
+
+                <!-- Controls & Parameters -->
+                <div class="parameters-section">
+                    <div class="taxonomy-tags-preview">
+                        <span class="tag-title">Target Taxonomy:</span>
+                        <div class="tag-badges">
+                            <span class="badge badge-main_text">main_text</span>
+                            <span class="badge badge-header">header</span>
+                            <span class="badge badge-footer">footer</span>
+                            <span class="badge badge-side_text">side_text</span>
+                            <span class="badge badge-filler">filler</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons-group">
+                        <button type="button" class="btn-primary" id="run-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <span>Execute Layout Detection</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Async Pipeline Progress Tracker -->
+                <div class="pipeline-progress-box" id="progress-box" style="display: none;">
+                    <div class="progress-header">
+                        <span class="progress-title" id="stage-text">Initializing Pipeline...</span>
+                        <span class="progress-pct" id="stage-pct">0%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <div class="pipeline-stage-nodes">
+                        <div class="stage-node" id="node-loading"><span>1. Load</span></div>
+                        <div class="stage-node" id="node-preproc"><span>2. Substrate</span></div>
+                        <div class="stage-node" id="node-detect"><span>3. Detect</span></div>
+                        <div class="stage-node" id="node-classify"><span>4. Classify</span></div>
+                        <div class="stage-node" id="node-complete"><span>5. Ready</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Visual Display & Inspector -->
+            <section class="results-panel glass-card">
+                <!-- Panel Header & View Switcher -->
+                <div class="results-header">
+                    <div class="results-title-group">
+                        <h2>Inspection & Layout Analysis</h2>
+                        <span class="substrate-pill" id="substrate-pill" style="display: none;">Paper Folio</span>
+                    </div>
+
+                    <div class="view-tabs">
+                        <button type="button" class="tab-btn active" data-tab="annotated">Annotated Overlay</button>
+                        <button type="button" class="tab-btn" data-tab="original">Original Scan</button>
+                    </div>
+                </div>
+
+                <!-- Telemetry Summary Strip -->
+                <div class="telemetry-strip" id="telemetry-strip" style="display: none; grid-template-columns: 1fr;">
+                    <div class="metric-card">
+                        <span class="metric-label">Detected Regions</span>
+                        <span class="metric-value" id="total-regions-val">0</span>
+                    </div>
+                </div>
+
+                <!-- Main Visual Canvas Area -->
+                <div class="canvas-viewport" id="canvas-viewport">
+                    <div class="empty-state" id="empty-state">
+                        <div class="empty-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        <h3>No Manuscript Loaded</h3>
+                        <p>Upload a manuscript scan or click any sample on the left to begin layout analysis.</p>
+                    </div>
+
+                    <!-- Image View Containers -->
+                    <div class="image-view-wrapper" id="image-view-wrapper" style="display: none;">
+                        <img id="display-annotated" class="viewport-img active" alt="Annotated Layout Overlay">
+                        <img id="display-original" class="viewport-img" alt="Original Manuscript Scan">
+                    </div>
+                </div>
+
+                <!-- Region Classification Breakdown & Inspector -->
+                <div class="region-inspector-wrapper" id="region-inspector" style="display: none;">
+                    <div class="inspector-header">
+                        <h3>Spatial Regions Breakdown</h3>
+                        <div class="class-filter-chips" id="class-filter-chips">
+                            <!-- Filter badges injected via JS -->
+                        </div>
+                    </div>
+                    <div class="regions-table-container">
+                        <table class="regions-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Class</th>
+                                    <th>Confidence</th>
+                                    <th>Bounding Box [x1, y1, x2, y2]</th>
+                                    <th>Area (px)</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="regions-table-body">
+                                <!-- Region rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Results Footer Actions -->
+                <div class="results-footer" id="results-footer" style="display: none;">
+                    <a id="download-overlay-btn" href="#" download class="btn-download">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Download Annotated Image</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

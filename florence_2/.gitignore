@@ -1,0 +1,58 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.pytest_cache
+backend/.pytest_cache/
+backend/**/__pycache__/
+
+# Environment & Secrets
+.env
+.env.*
+*.env
+*.pem
+*.key
+secrets.json
+
+# Model Weights & Heavy Checkpoints
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+*.engine
+*.ckpt
+*.h5
+backend/weights/*
+!backend/weights/.gitkeep
+
+# Local Model & Library Caches
+.cache/
+huggingface/
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
+
+# Output & Generated Results (Ignore generated binaries & uploads, preserve folder structure)
+results/*
+!results/.gitkeep
+backend/results/*
+!backend/results/.gitkeep
+!backend/results/uploads/
+backend/results/uploads/*
+!backend/results/uploads/.gitkeep
+data/output/
+runs/
+*.log
+

@@ -1,0 +1,24 @@
+# Python virtual environments & bytecode
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest & IDEs
+.pytest_cache/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# API Keys & Secrets
+.env
+*.env
+
+# Output results & uploads (exclude generated files)
+**/results/*
+!**/results/.gitkeep
+**/uploads/*
+!**/uploads/.gitkeep

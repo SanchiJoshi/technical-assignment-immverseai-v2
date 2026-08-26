@@ -1,0 +1,21 @@
+# Microsoft Florence-2 VLM Layout Region Detection & Spatial Classification Engine
+# PyTorch Deep Learning & Computer Vision Stack
+
+torch>=2.0.0
+torchvision>=0.15.0
+transformers==4.47.1
+timm>=1.0.0
+einops>=0.8.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+pillow>=10.0.0
+matplotlib>=3.7.0
+tqdm>=4.65.0
+pyyaml>=6.0
+
+# Flask Web Dashboard & REST Application Server
+flask>=3.0.0
+werkzeug>=3.0.0
+
+# Automated Verification & Test Framework
+pytest>=7.4.0
